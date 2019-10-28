@@ -6,6 +6,8 @@ This repo is for the front-end client of the serverless e-commerce dropshipping 
 
 This project is created using [Create React App](https://github.com/facebookincubator/create-react-app).
 
+This project is based on [Serverless Stack](https://serverless-stack.com)
+
 To use this repo locally, start by cloning it and installing the NPM packages.
 
 ``` bash
