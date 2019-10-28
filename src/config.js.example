@@ -1,0 +1,23 @@
+const dev = {
+  apiGateway: {
+    REGION: "us-east-1",
+    URL: "https://api.serverless-stack.seed-demo.club/dev"
+  }
+};
+
+const prod = {
+  apiGateway: {
+    REGION: "us-east-1",
+    URL: "https://api.serverless-stack.seed-demo.club/prod"
+  }
+};
+
+// Default to dev if not set
+const config = process.env.REACT_APP_STAGE === 'prod'
+  ? prod
+  : dev;
+
+export default {
+  // Add common config values here
+  ...config
+};
