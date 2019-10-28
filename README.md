@@ -15,7 +15,7 @@ $ git clone https://github.com/kessler-oliveira/serverless-ecommerce-dropshippin
 $ npm install
 ```
 
-Set the REGION_API and URL_API environment variables and run it locally.
+Set the REACT_APP_API_REGION and REACT_APP_API_URL environment variables and run it locally.
 
 ``` bash
 $ npm run start

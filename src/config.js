@@ -1,7 +1,7 @@
 const config = {
   apiGateway: {
-    REGION: process.env.REGION_API,
-    URL: process.env.URL_API
+    REGION: process.env.REACT_APP_API_REGION,
+    URL: process.env.REACT_APP_API_URL
   }
 };
 
