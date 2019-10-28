@@ -1,14 +1,14 @@
 const dev = {
   apiGateway: {
-    REGION: "us-east-1",
-    URL: "https://api.serverless-stack.seed-demo.club/dev"
+    REGION: process.env.REGION,
+    URL: process.env.URL
   }
 };
 
 const prod = {
   apiGateway: {
-    REGION: "us-east-1",
-    URL: "https://api.serverless-stack.seed-demo.club/prod"
+    REGION: process.env.REGION,
+    URL: process.env.URL
   }
 };
 

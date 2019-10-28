@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import { Auth } from "aws-amplify";
 import { Link, withRouter } from "react-router-dom";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
@@ -18,7 +17,7 @@ class App extends Component {
 
   async componentDidMount() {
     try {
-      if (await Auth.currentSession()) {
+      if (localStorage.getItem('JWT')) {
         this.userHasAuthenticated(true);
       }
     }
@@ -36,7 +35,7 @@ class App extends Component {
   }
 
   handleLogout = async event => {
-    await Auth.signOut();
+    localStorage.clear();
 
     this.userHasAuthenticated(false);
 
@@ -55,7 +54,7 @@ class App extends Component {
         <Navbar fluid collapseOnSelect>
           <Navbar.Header>
             <Navbar.Brand>
-              <Link to="/">Scratch</Link>
+              <Link to="/">SED</Link>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
@@ -63,12 +62,6 @@ class App extends Component {
             <Nav pullRight>
               {this.state.isAuthenticated
                 ? <Fragment>
-                    <LinkContainer to="/settings">
-                      <NavItem>Settings</NavItem>
-                    </LinkContainer>
-                    <LinkContainer to="/billing">
-                      <NavItem>Billing</NavItem>
-                    </LinkContainer>
                     <NavItem onClick={this.handleLogout}>Logout</NavItem>
                   </Fragment>
                 : <Fragment>

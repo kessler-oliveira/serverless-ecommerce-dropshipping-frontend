@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import { API } from "aws-amplify";
 import { Link } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
-import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import "./Home.css";
 
 export default class Home extends Component {
@@ -20,50 +17,14 @@ export default class Home extends Component {
       return;
     }
 
-    try {
-      const notes = await this.notes();
-      this.setState({ notes });
-    } catch (e) {
-      alert(e);
-    }
-
     this.setState({ isLoading: false });
-  }
-
-  notes() {
-    return API.get("notes", "/notes");
-  }
-
-  renderNotesList(notes) {
-    return [{}].concat(notes).map(
-      (note, i) =>
-        i !== 0
-          ? <LinkContainer
-              key={note.noteId}
-              to={`/notes/${note.noteId}`}
-            >
-              <ListGroupItem header={note.content.trim().split("\n")[0]}>
-                {"Created: " + new Date(note.createdAt).toLocaleString()}
-              </ListGroupItem>
-            </LinkContainer>
-          : <LinkContainer
-              key="new"
-              to="/notes/new"
-            >
-              <ListGroupItem>
-                <h4>
-                  <b>{"\uFF0B"}</b> Create a new note
-                </h4>
-              </ListGroupItem>
-            </LinkContainer>
-    );
   }
 
   renderLander() {
     return (
       <div className="lander">
-        <h1>Scratch</h1>
-        <p>A simple note taking app</p>
+        <h1>SED</h1>
+        <p>Serverless E-commerce Dropshipping</p>
         <div>
           <Link to="/login" className="btn btn-info btn-lg">
             Login
@@ -76,13 +37,11 @@ export default class Home extends Component {
     );
   }
 
-  renderNotes() {
+  renderHome() {
     return (
-      <div className="notes">
-        <PageHeader>Your Notes</PageHeader>
-        <ListGroup>
-          {!this.state.isLoading && this.renderNotesList(this.state.notes)}
-        </ListGroup>
+      <div className="lander">
+        <h1>SED</h1>
+        <p>Serverless E-commerce Dropshipping</p>
       </div>
     );
   }
@@ -90,7 +49,7 @@ export default class Home extends Component {
   render() {
     return (
       <div className="Home">
-        {this.props.isAuthenticated ? this.renderNotes() : this.renderLander()}
+        {this.props.isAuthenticated ? this.renderHome() : this.renderLander()}
       </div>
     );
   }

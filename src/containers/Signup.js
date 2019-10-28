@@ -1,11 +1,10 @@
 import React, { Component } from "react";
+import { API } from "aws-amplify";
 import {
-  HelpBlock,
   FormGroup,
   FormControl,
   ControlLabel
 } from "react-bootstrap";
-import { Auth } from "aws-amplify";
 import LoaderButton from "../components/LoaderButton";
 import "./Signup.css";
 
@@ -15,24 +14,33 @@ export default class Signup extends Component {
 
     this.state = {
       isLoading: false,
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
-      confirmationCode: "",
-      newUser: null
+      confirmationCode: ""
     };
+  }
+
+  createUser(user) {
+    return API.post("main", "/users", {
+      body: user
+    });
+  }
+
+  login(login) {
+    return API.post("main", "/login", {
+      body: login
+    });
   }
 
   validateForm() {
     return (
+      this.state.name.length > 0 &&
       this.state.email.length > 0 &&
       this.state.password.length > 0 &&
       this.state.password === this.state.confirmPassword
     );
-  }
-
-  validateConfirmationForm() {
-    return this.state.confirmationCode.length > 0;
   }
 
   handleChange = event => {
@@ -47,13 +55,22 @@ export default class Signup extends Component {
     this.setState({ isLoading: true });
 
     try {
-      const newUser = await Auth.signUp({
-        username: this.state.email,
+      await this.createUser({
+        name: this.state.name,
+        email: this.state.email,
+        password: this.state.password,
+        role: "CLIENT"
+      });
+
+      const login = await this.login({
+        email: this.state.email,
         password: this.state.password
       });
-      this.setState({
-        newUser
-      });
+
+      localStorage.setItem('JWT', login.token);
+
+      this.props.userHasAuthenticated(true);
+      this.props.history.push("/");
     } catch (e) {
       alert(e.message);
     }
@@ -61,52 +78,18 @@ export default class Signup extends Component {
     this.setState({ isLoading: false });
   }
 
-  handleConfirmationSubmit = async event => {
-    event.preventDefault();
-
-    this.setState({ isLoading: true });
-
-    try {
-      await Auth.confirmSignUp(this.state.email, this.state.confirmationCode);
-      await Auth.signIn(this.state.email, this.state.password);
-
-      this.props.userHasAuthenticated(true);
-      this.props.history.push("/");
-    } catch (e) {
-      alert(e.message);
-      this.setState({ isLoading: false });
-    }
-  }
-
-  renderConfirmationForm() {
-    return (
-      <form onSubmit={this.handleConfirmationSubmit}>
-        <FormGroup controlId="confirmationCode" bsSize="large">
-          <ControlLabel>Confirmation Code</ControlLabel>
-          <FormControl
-            autoFocus
-            type="tel"
-            value={this.state.confirmationCode}
-            onChange={this.handleChange}
-          />
-          <HelpBlock>Please check your email for the code.</HelpBlock>
-        </FormGroup>
-        <LoaderButton
-          block
-          bsSize="large"
-          disabled={!this.validateConfirmationForm()}
-          type="submit"
-          isLoading={this.state.isLoading}
-          text="Verify"
-          loadingText="Verifying…"
-        />
-      </form>
-    );
-  }
-
   renderForm() {
     return (
       <form onSubmit={this.handleSubmit}>
+        <FormGroup controlId="name" bsSize="large">
+          <ControlLabel>Name</ControlLabel>
+          <FormControl
+            autoFocus
+            type="name"
+            value={this.state.name}
+            onChange={this.handleChange}
+          />
+        </FormGroup>
         <FormGroup controlId="email" bsSize="large">
           <ControlLabel>Email</ControlLabel>
           <FormControl
@@ -148,9 +131,7 @@ export default class Signup extends Component {
   render() {
     return (
       <div className="Signup">
-        {this.state.newUser === null
-          ? this.renderForm()
-          : this.renderConfirmationForm()}
+        {this.renderForm()}
       </div>
     );
   }

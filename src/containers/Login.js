@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Auth } from "aws-amplify";
+import { API } from "aws-amplify";
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import "./Login.css";
@@ -32,12 +31,24 @@ export default class Login extends Component {
     this.setState({ isLoading: true });
 
     try {
-      await Auth.signIn(this.state.email, this.state.password);
+      const login = await this.login({
+        email: this.state.email,
+        password: this.state.password
+      });
+
+      localStorage.setItem('JWT', login.token);
+
       this.props.userHasAuthenticated(true);
     } catch (e) {
       alert(e.message);
       this.setState({ isLoading: false });
     }
+  }
+
+  login(login) {
+    return API.post("main", "/login", {
+      body: login
+    });
   }
 
   render() {
@@ -61,7 +72,6 @@ export default class Login extends Component {
               type="password"
             />
           </FormGroup>
-          <Link to="/login/reset">Forgot password?</Link>
           <LoaderButton
             block
             bsSize="large"
