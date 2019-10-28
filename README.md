@@ -15,7 +15,7 @@ $ git clone https://github.com/kessler-oliveira/serverless-ecommerce-dropshippin
 $ npm install
 ```
 
-Set the REGION and URL environment variables and run it locally.
+Set the REGION_API and URL_API environment variables and run it locally.
 
 ``` bash
 $ npm run start
